@@ -38,7 +38,9 @@ module Delayed
         def reserve(worker, max_run_time = Worker.max_run_time)
           # We get up to 5 jobs from the db. In case we cannot get exclusive access to a job we try the next.
           # this leads to a more even distribution of jobs across the worker processes
-          find_available(worker.name, 5, max_run_time).detect do |job|
+
+          # ELI: I modified the second parameter from 5 to 1
+          find_available(worker.name, 1, max_run_time).detect do |job|
             job.lock_exclusively!(max_run_time, worker.name)
           end
         end
